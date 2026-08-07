@@ -1,0 +1,15 @@
+{
+  "name": "Monash Library Books",
+  "totalStores": 12,
+  "storeTypes": {
+    "Academic": 6,
+    "Fiction": 4,
+    "Special Collections": 2
+  },
+  "openingHours": {
+    "Monday-Friday": { "open": "08:00", "close": "22:00" },
+    "Saturday-Sunday": { "open": "10:00", "close": "18:00" }
+  },
+  "countries": ["Australia", "Malaysia"],
+  "topSellers": ["1984", "Pride and Prejudice", "Animal Farm"]
+}

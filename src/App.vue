@@ -1,9 +1,9 @@
 <script setup>
-import MyName from './components/MyName.vue'
+import JSON from './components/JSON.vue'
 </script>
 
 <template>
   <main>
-    <MyName />
+    <JSON />
   </main>
 </template>
