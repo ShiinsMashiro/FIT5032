@@ -26,3 +26,6 @@ dist-ssr
 # Generated PDFs
 *.pdf
 
+# Office temp files
+~$*
+

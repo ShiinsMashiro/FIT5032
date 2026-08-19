@@ -1,7 +1,8 @@
 {
-  "name": "thuang-library",
+  "name": "fit5032-ecostep-melbourne",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Monash University FIT5032 Internet Applications Development - EcoStep Melbourne Climate Action Web Application",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.40"
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "chart.js": "^4.5.1",
+    "jspdf": "^4.2.1",
+    "leaflet": "^1.9.4",
+    "papaparse": "^5.6.0",
+    "vue": "^3.5.40",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.8",

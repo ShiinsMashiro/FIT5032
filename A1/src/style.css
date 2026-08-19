@@ -1,0 +1,47 @@
+/* Basic clean application styling */
+* {
+  border-radius: 0 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  margin: 0;
+  padding: 0;
+}
+
+/* Card and Border styling */
+.card, .border, .rounded {
+  border-color: #e2e8f0 !important;
+  border-radius: 0 !important;
+}
+
+/* Button styling with no hover color shift */
+.btn, .btn:hover, .btn:focus, .btn:active {
+  border-radius: 0 !important;
+  transition: none !important;
+}
+
+.btn-outline-dark:hover, .btn-outline-dark:focus {
+  background-color: transparent !important;
+  color: #212529 !important;
+  border-color: #212529 !important;
+}
+
+.btn-light:hover, .btn-light:focus {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+  border-color: #dee2e6 !important;
+}
+
+/* Form input styling */
+.form-control, .form-select, input, select, textarea {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+
+
