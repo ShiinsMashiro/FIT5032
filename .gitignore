@@ -23,9 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-# Generated PDFs
+# Generated PDFs & local screenshots
 *.pdf
+screenshots/
 
 # Office temp files
 ~$*
-
