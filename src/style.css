@@ -1,47 +1,26 @@
-/* Basic clean application styling */
-* {
-  border-radius: 0 !important;
-  transition: none !important;
-  animation: none !important;
+/* Tag selectors */
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f8fafc;
-  color: #1e293b;
-  margin: 0;
-  padding: 0;
+/* Class selectors */
+.form {
+  text-align: center;
+  margin-top: 50px;
 }
 
-/* Card and Border styling */
-.card, .border, .rounded {
-  border-color: #e2e8f0 !important;
-  border-radius: 0 !important;
+/* ID selectors */
+#username:focus,
+#password:focus,
+#isAustralian:focus,
+#reason:focus {
+  border-color: #FF6347; /* More obvious border color change (Tomato) */
+  background-color: #FFEBE8; /* Light background color change */
 }
 
-/* Button styling with no hover color shift */
-.btn, .btn:hover, .btn:focus, .btn:active {
-  border-radius: 0 !important;
-  transition: none !important;
+/* Attribute selectors */
+select[id="gender"] {
+  background-color: #d3d3d3; /* Default background color set to gray */
 }
-
-.btn-outline-dark:hover, .btn-outline-dark:focus {
-  background-color: transparent !important;
-  color: #212529 !important;
-  border-color: #212529 !important;
-}
-
-.btn-light:hover, .btn-light:focus {
-  background-color: #f8f9fa !important;
-  color: #212529 !important;
-  border-color: #dee2e6 !important;
-}
-
-/* Form input styling */
-.form-control, .form-select, input, select, textarea {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-
-
