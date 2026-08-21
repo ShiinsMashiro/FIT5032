@@ -26,6 +26,8 @@ dist-ssr
 # Generated PDFs & local screenshots
 *.pdf
 screenshots/
+screenshots_week4/
+screenshots*/
 
 # Office temp files
 ~$*

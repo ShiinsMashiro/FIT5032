@@ -1,31 +1,27 @@
 <template>
   <div class="container mt-5">
     <div class="row">
-      <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2">
+      <div class="col-md-8 offset-md-2">
         <h1 class="text-center">User Information Form</h1>
         <form @submit.prevent="submitForm">
-          <!-- Activity 7: Responsive Breakpoints for Username and Password -->
-          <!-- col-sm-6 ensures two columns at 600px (sm >= 576px) and 900px (md >= 768px) -->
           <div class="row mb-3">
-            <div class="col-12 col-sm-6">
+            <div class="col-md-6 col-sm-6">
               <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" v-model="formData.username">
+              <input type="text" class="form-control" id="username" v-model="formData.username" />
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-md-6 col-sm-6">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" v-model="formData.password">
+              <input type="password" class="form-control" id="password" v-model="formData.password" />
             </div>
           </div>
-
-          <!-- Activity 7: Responsive Breakpoints for Australian Resident and Gender -->
           <div class="row mb-3">
-            <div class="col-12 col-sm-6 d-flex align-items-center">
-              <div class="form-check mt-2 mt-sm-0">
-                <input type="checkbox" class="form-check-input" id="isAustralian" v-model="formData.isAustralian">
+            <div class="col-md-6 col-sm-6">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="isAustralian" v-model="formData.isAustralian" />
                 <label class="form-check-label" for="isAustralian">Australian Resident?</label>
               </div>
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-md-6 col-sm-6">
               <label for="gender" class="form-label">Gender</label>
               <select class="form-select" id="gender" v-model="formData.gender">
                 <option value="male">Male</option>
@@ -34,12 +30,10 @@
               </select>
             </div>
           </div>
-
           <div class="mb-3">
             <label for="reason" class="form-label">Reason for joining</label>
             <textarea class="form-control" id="reason" rows="3" v-model="formData.reason"></textarea>
           </div>
-
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -48,7 +42,7 @@
       </div>
     </div>
 
-    <!-- Activity 6 & 7: Display Submitted User Information Cards with Responsive Layout -->
+    <!-- Display Submitted Cards -->
     <div class="row mt-5" v-if="submittedCards.length">
       <div class="d-flex flex-wrap justify-content-center justify-content-sm-start">
         <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem;">
@@ -79,12 +73,7 @@ const formData = ref({
   gender: ''
 })
 
-const submittedCards = ref([
-  { username: 'Jinx', password: '123', isAustralian: true, gender: 'male', reason: 'None' },
-  { username: 'Yiwei', password: '123', isAustralian: true, gender: 'male', reason: 'None' },
-  { username: 'Delvin', password: '486', isAustralian: true, gender: 'male', reason: 'I like reading.' },
-  { username: 'Beg', password: '999', isAustralian: true, gender: 'male', reason: 'I like history.' }
-])
+const submittedCards = ref([])
 
 const submitForm = () => {
   submittedCards.value.push({ ...formData.value })
