@@ -80,21 +80,16 @@
       </div>
     </div>
 
-    <!-- Display Submitted Cards -->
+    <!-- PrimeVue DataTable for Submitted Users -->
     <div class="row mt-5" v-if="submittedCards.length">
-      <div class="d-flex flex-wrap justify-content-center justify-content-sm-start">
-        <div v-for="(card, index) in submittedCards" :key="index" class="card m-2" style="width: 18rem;">
-          <div class="card-header">
-            User Information
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Username: {{ card.username }}</li>
-            <li class="list-group-item">Password: {{ card.password }}</li>
-            <li class="list-group-item">Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}</li>
-            <li class="list-group-item">Gender: {{ card.gender }}</li>
-            <li class="list-group-item">Reason: {{ card.reason }}</li>
-          </ul>
-        </div>
+      <div class="col-12">
+        <DataTable :value="submittedCards" tableStyle="min-width: 50rem" class="p-datatable-sm custom-datatable">
+          <Column field="username" header="Username"></Column>
+          <Column field="password" header="Password"></Column>
+          <Column field="isAustralian" header="Australian Resident"></Column>
+          <Column field="gender" header="Gender"></Column>
+          <Column field="reason" header="Reason"></Column>
+        </DataTable>
       </div>
     </div>
   </div>
@@ -102,6 +97,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 const formData = ref({
   username: '',
@@ -206,19 +203,32 @@ const validateReason = (blur) => {
 };
 </script>
 
-<style scoped>
-.card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+<style>
+/* Exact light theme matching the slide */
+.p-datatable.custom-datatable {
+  background: #ffffff !important;
 }
-.card-header {
-  background-color: #275FDA;
-  color: white;
-  padding: 10px;
-  border-radius: 10px 10px 0 0;
+.p-datatable.custom-datatable .p-datatable-thead > tr > th {
+  background-color: transparent !important;
+  color: #212529 !important;
+  font-weight: 600 !important;
+  border: none !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  padding: 12px 16px !important;
 }
-.list-group-item {
-  padding: 10px;
+.p-datatable.custom-datatable .p-datatable-tbody > tr {
+  background-color: transparent !important;
+}
+.p-datatable.custom-datatable .p-datatable-tbody > tr > td {
+  border: none !important;
+  border-bottom: 1px solid #f1f3f5 !important;
+  color: #212529 !important;
+  padding: 12px 16px !important;
+}
+/* Hide any commercial license banners if rendered */
+div[style*="fixed"][style*="bottom"], 
+div:has(> a[href*="primevue"]),
+div:has(> [class*="license"]) {
+  display: none !important;
 }
 </style>
