@@ -6,7 +6,7 @@
       <p class="text-muted mb-0 small">Active Transport & Carbon Tracking</p>
     </div>
 
-    <!-- Summary Metrics -->
+    <!-- Summary Metrics (Simple stats based on tripList) -->
     <div class="row g-2 mb-4 text-center">
       <div class="col-4">
         <div class="p-2 border bg-white">
@@ -33,6 +33,7 @@
       <h5 class="mb-3">1. Add Commuter Trip</h5>
 
       <form @submit.prevent="addTrip">
+        <!-- Commuter Name -->
         <div class="mb-3">
           <label class="form-label small">Commuter Name:</label>
           <input
@@ -47,6 +48,7 @@
         </div>
 
         <div class="row mb-3">
+          <!-- Distance -->
           <div class="col-md-6">
             <label class="form-label small">Distance (km):</label>
             <input
@@ -61,6 +63,7 @@
             </div>
           </div>
 
+          <!-- Transport Mode -->
           <div class="col-md-6">
             <label class="form-label small">Transport Mode:</label>
             <select v-model="formData.mode" class="form-select">
@@ -75,6 +78,7 @@
           </div>
         </div>
 
+        <!-- Buttons: Submit and Clear -->
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-dark flex-grow-1">
             Submit Trip
@@ -88,21 +92,42 @@
 
     <!-- Part 2: Data Table (BR B.2 Dynamic Data) -->
     <div class="card p-3 border bg-white">
-      <h5 class="mb-3">2. Trip Records List</h5>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">2. Trip Records List</h5>
+        <span class="badge bg-secondary">{{ tripList.length }} Records</span>
+      </div>
 
-      <table class="table table-bordered mb-0">
+      <div v-if="tripList.length === 0" class="text-center text-muted py-3">
+        No trips recorded yet.
+      </div>
+
+      <table v-else class="table table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th>No.</th>
+            <th style="width: 10%;">No.</th>
             <th>Name</th>
+            <th>Mode</th>
             <th>Distance</th>
+            <th style="width: 15%;" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tripList" :key="index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.name }}</td>
+            <td>
+              <span class="badge bg-light text-dark border">{{ item.mode }}</span>
+            </td>
             <td>{{ item.distance }} km</td>
+            <td class="text-center">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger py-0 px-2"
+                @click="deleteTrip(index)"
+              >
+                Delete
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -113,24 +138,24 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-// Form state
+// Form state object
 const formData = ref({
   name: '',
   distance: '',
   mode: ''
 })
 
-// Error messages
+// Error messages object
 const errors = ref({
   name: '',
   distance: '',
   mode: ''
 })
 
-// List of trips
+// List of trips with initial dummy data
 const tripList = ref([
-  { name: 'Liam Cooper', distance: 5.8 },
-  { name: 'Maya Patel', distance: 8.2 }
+  { name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
+  { name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
 ])
 
 // Computed statistics
@@ -145,7 +170,7 @@ const co2Saved = computed(() => {
   return (Number(totalDistance.value) * 0.15).toFixed(2)
 })
 
-// Form validation function
+// Validation function
 function validateForm() {
   let isValid = true
 
@@ -173,7 +198,7 @@ function validateForm() {
   return isValid
 }
 
-// Function to add a new trip
+// Add a new trip
 function addTrip() {
   if (!validateForm()) {
     return
@@ -181,13 +206,14 @@ function addTrip() {
 
   tripList.value.push({
     name: formData.value.name,
-    distance: Number(formData.value.distance)
+    distance: Number(formData.value.distance),
+    mode: formData.value.mode
   })
 
   clearForm()
 }
 
-// Clear form inputs and errors
+// Clear form inputs and error messages
 function clearForm() {
   formData.value = {
     name: '',
@@ -199,6 +225,11 @@ function clearForm() {
     distance: '',
     mode: ''
   }
+}
+
+// Delete a trip from the list
+function deleteTrip(index) {
+  tripList.value.splice(index, 1)
 }
 </script>
 
