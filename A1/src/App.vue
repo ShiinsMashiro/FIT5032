@@ -1,9 +1,31 @@
 <template>
-  <div class="container my-5" style="max-width: 650px;">
+  <div class="container my-5" style="max-width: 700px;">
     <!-- Simple Title -->
     <div class="p-3 mb-4 bg-light border text-center">
       <h3 class="text-dark mb-1">Ride & Stride Melbourne</h3>
       <p class="text-muted mb-0 small">Active Transport & Carbon Tracking</p>
+    </div>
+
+    <!-- Summary Metrics -->
+    <div class="row g-2 mb-4 text-center">
+      <div class="col-4">
+        <div class="p-2 border bg-white">
+          <small class="text-muted d-block">Total Trips</small>
+          <strong class="fs-5">{{ totalTrips }}</strong>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-2 border bg-white">
+          <small class="text-muted d-block">Total Distance</small>
+          <strong class="fs-5">{{ totalDistance }} km</strong>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-2 border bg-white">
+          <small class="text-muted d-block">CO₂ Saved</small>
+          <strong class="fs-5 text-success">{{ co2Saved }} kg</strong>
+        </div>
+      </div>
     </div>
 
     <!-- Part 1: Input Form (BR B.1 Validation) -->
@@ -89,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 // Form state
 const formData = ref({
@@ -110,6 +132,18 @@ const tripList = ref([
   { name: 'Liam Cooper', distance: 5.8 },
   { name: 'Maya Patel', distance: 8.2 }
 ])
+
+// Computed statistics
+const totalTrips = computed(() => tripList.value.length)
+
+const totalDistance = computed(() => {
+  const sum = tripList.value.reduce((acc, curr) => acc + Number(curr.distance || 0), 0)
+  return sum.toFixed(1)
+})
+
+const co2Saved = computed(() => {
+  return (Number(totalDistance.value) * 0.15).toFixed(2)
+})
 
 // Form validation function
 function validateForm() {
