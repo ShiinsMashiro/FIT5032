@@ -10,11 +10,6 @@
     <div class="card p-3 mb-4 border bg-white">
       <h5 class="mb-3">1. Add Commuter Trip</h5>
 
-      <!-- Error Message -->
-      <div v-if="errorMsg" class="alert alert-danger py-2 small mb-3">
-        {{ errorMsg }}
-      </div>
-
       <form @submit.prevent="addTrip">
         <div class="mb-3">
           <label class="form-label small">Commuter Name:</label>
@@ -24,6 +19,9 @@
             class="form-control"
             placeholder="Enter commuter name"
           />
+          <div v-if="errors.name" class="text-danger small mt-1">
+            {{ errors.name }}
+          </div>
         </div>
 
         <div class="row mb-3">
@@ -36,6 +34,9 @@
               class="form-control"
               placeholder="Enter distance"
             />
+            <div v-if="errors.distance" class="text-danger small mt-1">
+              {{ errors.distance }}
+            </div>
           </div>
 
           <div class="col-md-6">
@@ -46,6 +47,9 @@
               <option value="Cycling">Cycling</option>
               <option value="Public Transport">Public Transport</option>
             </select>
+            <div v-if="errors.mode" class="text-danger small mt-1">
+              {{ errors.mode }}
+            </div>
           </div>
         </div>
 
@@ -94,7 +98,12 @@ const formData = ref({
   mode: ''
 })
 
-const errorMsg = ref('')
+// Error messages
+const errors = ref({
+  name: '',
+  distance: '',
+  mode: ''
+})
 
 // List of trips
 const tripList = ref([
@@ -102,24 +111,39 @@ const tripList = ref([
   { name: 'Maya Patel', distance: 8.2 }
 ])
 
-// Function to add a new trip
-function addTrip() {
+// Form validation function
+function validateForm() {
+  let isValid = true
+
   if (!formData.value.name.trim()) {
-    errorMsg.value = 'Please enter a commuter name.'
-    return
+    errors.value.name = 'Please enter a commuter name.'
+    isValid = false
+  } else {
+    errors.value.name = ''
   }
 
   if (!formData.value.distance || Number(formData.value.distance) <= 0) {
-    errorMsg.value = 'Distance must be greater than 0.'
-    return
+    errors.value.distance = 'Distance must be greater than 0.'
+    isValid = false
+  } else {
+    errors.value.distance = ''
   }
 
   if (!formData.value.mode) {
-    errorMsg.value = 'Please select a transport mode.'
-    return
+    errors.value.mode = 'Please select a transport mode.'
+    isValid = false
+  } else {
+    errors.value.mode = ''
   }
 
-  errorMsg.value = ''
+  return isValid
+}
+
+// Function to add a new trip
+function addTrip() {
+  if (!validateForm()) {
+    return
+  }
 
   tripList.value.push({
     name: formData.value.name,
@@ -129,14 +153,18 @@ function addTrip() {
   clearForm()
 }
 
-// Clear form inputs
+// Clear form inputs and errors
 function clearForm() {
   formData.value = {
     name: '',
     distance: '',
     mode: ''
   }
-  errorMsg.value = ''
+  errors.value = {
+    name: '',
+    distance: '',
+    mode: ''
+  }
 }
 </script>
 
