@@ -49,6 +49,7 @@
 
       <form @submit.prevent="addTrip">
         <div class="row mb-3">
+          <!-- Commuter Name -->
           <div class="col-md-6">
             <label class="form-label small">Commuter Name:</label>
             <input
@@ -62,6 +63,7 @@
             </div>
           </div>
 
+          <!-- Trip Date -->
           <div class="col-md-6">
             <label class="form-label small">Trip Date:</label>
             <input
@@ -76,6 +78,7 @@
         </div>
 
         <div class="row mb-3">
+          <!-- Distance -->
           <div class="col-md-6">
             <label class="form-label small">Distance (km):</label>
             <input
@@ -90,6 +93,7 @@
             </div>
           </div>
 
+          <!-- Transport Mode -->
           <div class="col-md-6">
             <label class="form-label small">Transport Mode:</label>
             <select v-model="formData.mode" class="form-select">
@@ -104,6 +108,7 @@
           </div>
         </div>
 
+        <!-- Buttons: Submit and Clear -->
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-dark flex-grow-1">
             Submit Trip
@@ -115,14 +120,28 @@
       </form>
     </div>
 
-    <!-- Part 2: Data Table -->
+    <!-- Part 2: Data Table with Filter -->
     <div class="card p-3 border bg-white">
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
         <h5 class="mb-0">2. Trip Records List</h5>
-        <span class="badge bg-secondary">{{ tripList.length }} Records</span>
+        
+        <!-- Filter by Mode -->
+        <div class="d-flex align-items-center gap-2">
+          <label class="small text-muted mb-0">Filter:</label>
+          <select v-model="selectedFilter" class="form-select form-select-sm" style="width: 160px;">
+            <option value="All">All Modes</option>
+            <option value="Walking">Walking</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Public Transport">Public Transport</option>
+          </select>
+        </div>
       </div>
 
-      <table class="table table-bordered mb-0">
+      <div v-if="filteredTrips.length === 0" class="text-center text-muted py-4 border bg-light">
+        No trips found for the selected filter.
+      </div>
+
+      <table v-else class="table table-bordered mb-0">
         <thead class="table-light">
           <tr>
             <th style="width: 8%;">No.</th>
@@ -134,7 +153,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in tripList" :key="index">
+          <tr v-for="(item, index) in filteredTrips" :key="item.id || index">
             <td>{{ index + 1 }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.name }}</td>
@@ -146,7 +165,7 @@
               <button
                 type="button"
                 class="btn btn-sm btn-outline-danger py-0 px-2"
-                @click="deleteTrip(index)"
+                @click="deleteTrip(item.id)"
               >
                 Delete
               </button>
@@ -161,6 +180,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+// Form state object
 const formData = ref({
   name: '',
   date: '2026-08-26',
@@ -168,6 +188,7 @@ const formData = ref({
   mode: ''
 })
 
+// Error messages object
 const errors = ref({
   name: '',
   date: '',
@@ -175,11 +196,16 @@ const errors = ref({
   mode: ''
 })
 
+// Filter state
+const selectedFilter = ref('All')
+
+// List of trips with initial dummy data
 const tripList = ref([
-  { date: '2026-08-24', name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
-  { date: '2026-08-25', name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
+  { id: 1, date: '2026-08-24', name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
+  { id: 2, date: '2026-08-25', name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
 ])
 
+// Computed statistics
 const totalTrips = computed(() => tripList.value.length)
 
 const totalDistance = computed(() => {
@@ -191,12 +217,22 @@ const co2Saved = computed(() => {
   return (Number(totalDistance.value) * 0.15).toFixed(2)
 })
 
+// Community weekly goal (50 km)
 const weeklyGoalKm = 50
 const goalProgress = computed(() => {
   const percent = (Number(totalDistance.value) / weeklyGoalKm) * 100
   return Math.min(Math.round(percent), 100)
 })
 
+// Filtered trips list based on selected transport mode
+const filteredTrips = computed(() => {
+  if (selectedFilter.value === 'All') {
+    return tripList.value
+  }
+  return tripList.value.filter(item => item.mode === selectedFilter.value)
+})
+
+// Validation function
 function validateForm() {
   let isValid = true
 
@@ -231,12 +267,14 @@ function validateForm() {
   return isValid
 }
 
+// Add a new trip
 function addTrip() {
   if (!validateForm()) {
     return
   }
 
   tripList.value.push({
+    id: Date.now(),
     date: formData.value.date,
     name: formData.value.name,
     distance: Number(formData.value.distance),
@@ -246,6 +284,7 @@ function addTrip() {
   clearForm()
 }
 
+// Clear form inputs and error messages
 function clearForm() {
   formData.value = {
     name: '',
@@ -261,8 +300,9 @@ function clearForm() {
   }
 }
 
-function deleteTrip(index) {
-  tripList.value.splice(index, 1)
+// Delete a trip by id
+function deleteTrip(id) {
+  tripList.value = tripList.value.filter(item => item.id !== id)
 }
 </script>
 
