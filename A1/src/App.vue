@@ -7,7 +7,7 @@
     </div>
 
     <!-- Summary Metrics -->
-    <div class="row g-2 mb-4 text-center">
+    <div class="row g-2 mb-3 text-center">
       <div class="col-4">
         <div class="p-2 border bg-white">
           <small class="text-muted d-block">Total Trips</small>
@@ -25,6 +25,21 @@
           <small class="text-muted d-block">CO₂ Saved</small>
           <strong class="fs-5 text-success">{{ co2Saved }} kg</strong>
         </div>
+      </div>
+    </div>
+
+    <!-- Weekly Target Progress Bar -->
+    <div class="card p-3 mb-4 border bg-white">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <small class="fw-bold text-secondary">Weekly Community Target (50 km)</small>
+        <small class="text-muted">{{ goalProgress }}% Completed</small>
+      </div>
+      <div class="progress" style="height: 12px;">
+        <div
+          class="progress-bar bg-success"
+          role="progressbar"
+          :style="{ width: goalProgress + '%' }"
+        ></div>
       </div>
     </div>
 
@@ -174,6 +189,12 @@ const totalDistance = computed(() => {
 
 const co2Saved = computed(() => {
   return (Number(totalDistance.value) * 0.15).toFixed(2)
+})
+
+const weeklyGoalKm = 50
+const goalProgress = computed(() => {
+  const percent = (Number(totalDistance.value) / weeklyGoalKm) * 100
+  return Math.min(Math.round(percent), 100)
 })
 
 function validateForm() {
