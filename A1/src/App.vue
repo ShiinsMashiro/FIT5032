@@ -1,12 +1,12 @@
 <template>
-  <div class="container my-5" style="max-width: 700px;">
+  <div class="container my-5" style="max-width: 750px;">
     <!-- Simple Title -->
     <div class="p-3 mb-4 bg-light border text-center">
       <h3 class="text-dark mb-1">Ride & Stride Melbourne</h3>
       <p class="text-muted mb-0 small">Active Transport & Carbon Tracking</p>
     </div>
 
-    <!-- Summary Metrics (Simple stats based on tripList) -->
+    <!-- Summary Metrics -->
     <div class="row g-2 mb-4 text-center">
       <div class="col-4">
         <div class="p-2 border bg-white">
@@ -28,27 +28,39 @@
       </div>
     </div>
 
-    <!-- Part 1: Input Form (BR B.1 Validation) -->
+    <!-- Part 1: Input Form -->
     <div class="card p-3 mb-4 border bg-white">
       <h5 class="mb-3">1. Add Commuter Trip</h5>
 
       <form @submit.prevent="addTrip">
-        <!-- Commuter Name -->
-        <div class="mb-3">
-          <label class="form-label small">Commuter Name:</label>
-          <input
-            v-model="formData.name"
-            type="text"
-            class="form-control"
-            placeholder="Enter commuter name"
-          />
-          <div v-if="errors.name" class="text-danger small mt-1">
-            {{ errors.name }}
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label small">Commuter Name:</label>
+            <input
+              v-model="formData.name"
+              type="text"
+              class="form-control"
+              placeholder="Enter commuter name"
+            />
+            <div v-if="errors.name" class="text-danger small mt-1">
+              {{ errors.name }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small">Trip Date:</label>
+            <input
+              v-model="formData.date"
+              type="date"
+              class="form-control"
+            />
+            <div v-if="errors.date" class="text-danger small mt-1">
+              {{ errors.date }}
+            </div>
           </div>
         </div>
 
         <div class="row mb-3">
-          <!-- Distance -->
           <div class="col-md-6">
             <label class="form-label small">Distance (km):</label>
             <input
@@ -63,7 +75,6 @@
             </div>
           </div>
 
-          <!-- Transport Mode -->
           <div class="col-md-6">
             <label class="form-label small">Transport Mode:</label>
             <select v-model="formData.mode" class="form-select">
@@ -78,7 +89,6 @@
           </div>
         </div>
 
-        <!-- Buttons: Submit and Clear -->
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-dark flex-grow-1">
             Submit Trip
@@ -90,30 +100,28 @@
       </form>
     </div>
 
-    <!-- Part 2: Data Table (BR B.2 Dynamic Data) -->
+    <!-- Part 2: Data Table -->
     <div class="card p-3 border bg-white">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">2. Trip Records List</h5>
         <span class="badge bg-secondary">{{ tripList.length }} Records</span>
       </div>
 
-      <div v-if="tripList.length === 0" class="text-center text-muted py-3">
-        No trips recorded yet.
-      </div>
-
-      <table v-else class="table table-bordered mb-0">
+      <table class="table table-bordered mb-0">
         <thead class="table-light">
           <tr>
-            <th style="width: 10%;">No.</th>
+            <th style="width: 8%;">No.</th>
+            <th>Date</th>
             <th>Name</th>
             <th>Mode</th>
             <th>Distance</th>
-            <th style="width: 15%;" class="text-center">Action</th>
+            <th style="width: 14%;" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in tripList" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ item.date }}</td>
             <td>{{ item.name }}</td>
             <td>
               <span class="badge bg-light text-dark border">{{ item.mode }}</span>
@@ -138,27 +146,25 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-// Form state object
 const formData = ref({
   name: '',
+  date: '2026-08-26',
   distance: '',
   mode: ''
 })
 
-// Error messages object
 const errors = ref({
   name: '',
+  date: '',
   distance: '',
   mode: ''
 })
 
-// List of trips with initial dummy data
 const tripList = ref([
-  { name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
-  { name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
+  { date: '2026-08-24', name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
+  { date: '2026-08-25', name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
 ])
 
-// Computed statistics
 const totalTrips = computed(() => tripList.value.length)
 
 const totalDistance = computed(() => {
@@ -170,7 +176,6 @@ const co2Saved = computed(() => {
   return (Number(totalDistance.value) * 0.15).toFixed(2)
 })
 
-// Validation function
 function validateForm() {
   let isValid = true
 
@@ -179,6 +184,13 @@ function validateForm() {
     isValid = false
   } else {
     errors.value.name = ''
+  }
+
+  if (!formData.value.date) {
+    errors.value.date = 'Please select a date.'
+    isValid = false
+  } else {
+    errors.value.date = ''
   }
 
   if (!formData.value.distance || Number(formData.value.distance) <= 0) {
@@ -198,13 +210,13 @@ function validateForm() {
   return isValid
 }
 
-// Add a new trip
 function addTrip() {
   if (!validateForm()) {
     return
   }
 
   tripList.value.push({
+    date: formData.value.date,
     name: formData.value.name,
     distance: Number(formData.value.distance),
     mode: formData.value.mode
@@ -213,21 +225,21 @@ function addTrip() {
   clearForm()
 }
 
-// Clear form inputs and error messages
 function clearForm() {
   formData.value = {
     name: '',
+    date: '2026-08-26',
     distance: '',
     mode: ''
   }
   errors.value = {
     name: '',
+    date: '',
     distance: '',
     mode: ''
   }
 }
 
-// Delete a trip from the list
 function deleteTrip(index) {
   tripList.value.splice(index, 1)
 }
