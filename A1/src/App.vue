@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-5" style="max-width: 750px;">
+  <div class="container my-5" style="max-width: 720px;">
     <!-- Simple Title -->
     <div class="p-3 mb-4 bg-light border text-center">
       <h3 class="text-dark mb-1">Ride & Stride Melbourne</h3>
@@ -50,7 +50,7 @@
       <form @submit.prevent="addTrip">
         <div class="row mb-3">
           <!-- Commuter Name -->
-          <div class="col-md-6">
+          <div class="col-md-6 mb-2 mb-md-0">
             <label class="form-label small">Commuter Name:</label>
             <input
               v-model="formData.name"
@@ -79,7 +79,7 @@
 
         <div class="row mb-3">
           <!-- Distance -->
-          <div class="col-md-6">
+          <div class="col-md-6 mb-2 mb-md-0">
             <label class="form-label small">Distance (km):</label>
             <input
               v-model="formData.distance"
@@ -122,13 +122,13 @@
 
     <!-- Part 2: Data Table with Filter -->
     <div class="card p-3 border bg-white">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+      <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
         <h5 class="mb-0">2. Trip Records List</h5>
         
-        <!-- Filter by Mode -->
+        <!-- Simple Filter by Mode -->
         <div class="d-flex align-items-center gap-2">
           <label class="small text-muted mb-0">Filter:</label>
-          <select v-model="selectedFilter" class="form-select form-select-sm" style="width: 160px;">
+          <select v-model="selectedFilter" class="form-select form-select-sm" style="width: 150px;">
             <option value="All">All Modes</option>
             <option value="Walking">Walking</option>
             <option value="Cycling">Cycling</option>
@@ -137,7 +137,7 @@
         </div>
       </div>
 
-      <div v-if="filteredTrips.length === 0" class="text-center text-muted py-4 border bg-light">
+      <div v-if="filteredTrips.length === 0" class="text-center text-muted py-3 border bg-light">
         No trips found for the selected filter.
       </div>
 
@@ -183,7 +183,7 @@ import { ref, computed } from 'vue'
 // Form state object
 const formData = ref({
   name: '',
-  date: '2026-08-26',
+  date: '2026-08-27',
   distance: '',
   mode: ''
 })
@@ -199,10 +199,11 @@ const errors = ref({
 // Filter state
 const selectedFilter = ref('All')
 
-// List of trips with initial dummy data
+// Initial sample data (3 simple records)
 const tripList = ref([
-  { id: 1, date: '2026-08-24', name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
-  { id: 2, date: '2026-08-25', name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' }
+  { id: 1, date: '2026-08-25', name: 'Liam Cooper', distance: 5.8, mode: 'Cycling' },
+  { id: 2, date: '2026-08-26', name: 'Maya Patel', distance: 8.2, mode: 'Public Transport' },
+  { id: 3, date: '2026-08-27', name: 'Sarah Jenkins', distance: 3.5, mode: 'Walking' }
 ])
 
 // Computed statistics
@@ -288,7 +289,7 @@ function addTrip() {
 function clearForm() {
   formData.value = {
     name: '',
-    date: '2026-08-26',
+    date: '2026-08-27',
     distance: '',
     mode: ''
   }
