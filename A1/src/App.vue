@@ -1,9 +1,26 @@
-<template>
+﻿<template>
   <div class="container my-5" style="max-width: 720px;">
     <!-- Simple Title -->
     <div class="p-3 mb-4 bg-light border text-center">
       <h3 class="text-dark mb-1">Ride & Stride Melbourne</h3>
       <p class="text-muted mb-0 small">Active Transport & Carbon Tracking</p>
+    </div>
+
+    <!-- User Authentication (BR C.1) -->
+    <div class="card p-3 mb-4 border bg-white">
+      <div v-if="currentUser" class="d-flex justify-content-between align-items-center">
+        <span>Logged in as: <strong>{{ currentUser }}</strong></span>
+        <button class="btn btn-sm btn-outline-danger" @click="logout">Logout</button>
+      </div>
+      <div v-else>
+        <div class="d-flex gap-2">
+          <input v-model="usernameInput" type="text" class="form-control form-control-sm" placeholder="Username" />
+          <input v-model="passwordInput" type="password" class="form-control form-control-sm" placeholder="Password" />
+          <button class="btn btn-sm btn-dark" @click="login">Login</button>
+          <button class="btn btn-sm btn-outline-secondary" @click="register">Register</button>
+        </div>
+        <div v-if="authError" class="text-danger small mt-1">{{ authError }}</div>
+      </div>
     </div>
 
     <!-- Summary Metrics -->
@@ -179,6 +196,51 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+
+// ================= BR C.1: Simple Authentication =================
+const currentUser = ref(localStorage.getItem('currentUser') || '')
+const usernameInput = ref('')
+const passwordInput = ref('')
+const authError = ref('')
+
+function register() {
+  if (!usernameInput.value.trim() || !passwordInput.value) {
+    authError.value = 'Please enter both username and password.'
+    return
+  }
+  localStorage.setItem('user_' + usernameInput.value.trim(), passwordInput.value)
+  currentUser.value = usernameInput.value.trim()
+  localStorage.setItem('currentUser', currentUser.value)
+  if (!formData.value.name) {
+    formData.value.name = currentUser.value
+  }
+  usernameInput.value = ''
+  passwordInput.value = ''
+  authError.value = ''
+}
+
+function login() {
+  const saved = localStorage.getItem('user_' + usernameInput.value.trim())
+  if (saved && saved === passwordInput.value) {
+    currentUser.value = usernameInput.value.trim()
+    localStorage.setItem('currentUser', currentUser.value)
+    if (!formData.value.name) {
+      formData.value.name = currentUser.value
+    }
+    usernameInput.value = ''
+    passwordInput.value = ''
+    authError.value = ''
+  } else {
+    authError.value = 'Invalid username or password.'
+  }
+}
+
+function logout() {
+  currentUser.value = ''
+  localStorage.removeItem('currentUser')
+  authError.value = ''
+}
+// ================================================================
 
 // Form state object
 const formData = ref({
