@@ -6,16 +6,41 @@
       <p class="text-muted mb-0 small">Active Transport & Carbon Tracking</p>
     </div>
 
-    <!-- User Authentication (BR C.1) -->
+    <!-- User Authentication (BR C.1 & C.2) -->
     <div class="card p-3 mb-4 border bg-white">
-      <div v-if="currentUser" class="d-flex justify-content-between align-items-center">
-        <span>Logged in as: <strong>{{ currentUser }}</strong></span>
-        <button class="btn btn-sm btn-outline-danger" @click="logout">Logout</button>
+      <div v-if="currentUser">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <span>Logged in as: <strong>{{ currentUser }}</strong></span>
+            <span class="badge ms-2" :class="currentRole === 'admin' ? 'bg-danger' : 'bg-primary'">
+              {{ currentRole === 'admin' ? 'Admin' : 'Commuter' }}
+            </span>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" @click="logout">Logout</button>
+        </div>
+
+        <!-- Role-based Authorization Banner (BR C.2) -->
+        <div v-if="currentRole === 'admin'" class="alert alert-danger py-2 px-3 mt-3 mb-0 d-flex justify-content-between align-items-center">
+          <div>
+            <strong>Admin Privileges:</strong>
+            <span class="small ms-1">Full administrator access unlocked.</span>
+          </div>
+          <button class="btn btn-sm btn-danger py-0 px-2" @click="clearAllTrips">
+            Clear All Records
+          </button>
+        </div>
+        <div v-else class="alert alert-light border py-1 px-3 mt-3 mb-0 text-muted small">
+          Standard Commuter Access: Regular trip recording permissions.
+        </div>
       </div>
       <div v-else>
         <div class="d-flex gap-2">
           <input v-model="usernameInput" type="text" class="form-control form-control-sm" placeholder="Username" />
           <input v-model="passwordInput" type="password" class="form-control form-control-sm" placeholder="Password" />
+          <select v-model="roleInput" class="form-select form-select-sm" style="width: 125px;">
+            <option value="commuter">Commuter</option>
+            <option value="admin">Admin</option>
+          </select>
           <button class="btn btn-sm btn-dark" @click="login">Login</button>
           <button class="btn btn-sm btn-outline-secondary" @click="register">Register</button>
         </div>
@@ -197,10 +222,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-// ================= BR C.1: Simple Authentication =================
+// ================= BR C.1 & C.2: Auth & Role-based Access =================
 const currentUser = ref(localStorage.getItem('currentUser') || '')
+const currentRole = ref(localStorage.getItem('currentRole') || '')
 const usernameInput = ref('')
 const passwordInput = ref('')
+const roleInput = ref('commuter')
 const authError = ref('')
 
 function register() {
@@ -208,11 +235,15 @@ function register() {
     authError.value = 'Please enter both username and password.'
     return
   }
-  localStorage.setItem('user_' + usernameInput.value.trim(), passwordInput.value)
-  currentUser.value = usernameInput.value.trim()
-  localStorage.setItem('currentUser', currentUser.value)
+  const uname = usernameInput.value.trim()
+  localStorage.setItem('user_' + uname, passwordInput.value)
+  localStorage.setItem('role_' + uname, roleInput.value)
+  currentUser.value = uname
+  currentRole.value = roleInput.value
+  localStorage.setItem('currentUser', uname)
+  localStorage.setItem('currentRole', currentRole.value)
   if (!formData.value.name) {
-    formData.value.name = currentUser.value
+    formData.value.name = uname
   }
   usernameInput.value = ''
   passwordInput.value = ''
@@ -220,12 +251,15 @@ function register() {
 }
 
 function login() {
-  const saved = localStorage.getItem('user_' + usernameInput.value.trim())
+  const uname = usernameInput.value.trim()
+  const saved = localStorage.getItem('user_' + uname)
   if (saved && saved === passwordInput.value) {
-    currentUser.value = usernameInput.value.trim()
-    localStorage.setItem('currentUser', currentUser.value)
+    currentUser.value = uname
+    currentRole.value = localStorage.getItem('role_' + uname) || roleInput.value
+    localStorage.setItem('currentUser', uname)
+    localStorage.setItem('currentRole', currentRole.value)
     if (!formData.value.name) {
-      formData.value.name = currentUser.value
+      formData.value.name = uname
     }
     usernameInput.value = ''
     passwordInput.value = ''
@@ -237,10 +271,18 @@ function login() {
 
 function logout() {
   currentUser.value = ''
+  currentRole.value = ''
   localStorage.removeItem('currentUser')
+  localStorage.removeItem('currentRole')
   authError.value = ''
 }
-// ================================================================
+
+function clearAllTrips() {
+  if (confirm('Admin confirmation: Are you sure you want to clear all community records?')) {
+    tripList.value = []
+  }
+}
+// =========================================================================
 
 // Form state object
 const formData = ref({
