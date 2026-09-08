@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="container my-5" style="max-width: 720px;">
     <!-- Simple Title -->
     <div class="p-3 mb-4 bg-light border text-center">
@@ -216,6 +216,96 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Part 3: Community Route Reviews & Ratings (BR C.3) -->
+    <div class="card p-3 mb-4 border bg-white">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">3. Route Reviews & Rating Aggregation</h5>
+        <div>
+          <span class="text-muted small me-1">Average Rating:</span>
+          <span class="badge bg-success fs-6">{{ averageRating }} / 5.0</span>
+          <small class="text-muted ms-1">({{ reviewList.length }} reviews)</small>
+        </div>
+      </div>
+
+      <!-- Add Review Form -->
+      <form @submit.prevent="addReview" class="p-3 bg-light border mb-3">
+        <div class="row g-2">
+          <div class="col-md-5">
+            <label class="form-label small mb-1">Route Name:</label>
+            <input
+              v-model="reviewForm.route"
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="e.g. Swanston St Bike Lane"
+            />
+            <div v-if="reviewErrors.route" class="text-danger small mt-1">{{ reviewErrors.route }}</div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small mb-1">Rating (1 to 5):</label>
+            <select v-model.number="reviewForm.rating" class="form-select form-select-sm">
+              <option :value="5">5 - Excellent</option>
+              <option :value="4">4 - Good</option>
+              <option :value="3">3 - Average</option>
+              <option :value="2">2 - Fair</option>
+              <option :value="1">1 - Poor</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small mb-1">Reviewer Name:</label>
+            <input
+              v-model="reviewForm.author"
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Your name"
+            />
+            <div v-if="reviewErrors.author" class="text-danger small mt-1">{{ reviewErrors.author }}</div>
+          </div>
+          <div class="col-12 mt-2">
+            <label class="form-label small mb-1">Comment / Feedback:</label>
+            <input
+              v-model="reviewForm.comment"
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Share your active travel experience on this route"
+            />
+            <div v-if="reviewErrors.comment" class="text-danger small mt-1">{{ reviewErrors.comment }}</div>
+          </div>
+          <div class="col-12 text-end mt-2">
+            <button type="submit" class="btn btn-sm btn-dark">Submit Review</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Review List -->
+      <div v-if="reviewList.length === 0" class="text-center text-muted py-3 border bg-light">
+        No community reviews yet.
+      </div>
+      <div v-else class="list-group list-group-flush">
+        <div
+          v-for="(item, index) in reviewList"
+          :key="item.id || index"
+          class="list-group-item px-0 py-2 d-flex justify-content-between align-items-start"
+        >
+          <div>
+            <div class="fw-bold small">
+              {{ item.route }}
+              <span class="badge bg-secondary ms-2">Rating: {{ item.rating }}/5</span>
+            </div>
+            <div class="text-muted small">{{ item.comment }}</div>
+            <small class="text-secondary">By: {{ item.author }} ({{ item.date }})</small>
+          </div>
+          <button
+            v-if="currentRole === 'admin'"
+            type="button"
+            class="btn btn-sm btn-outline-danger py-0 px-2"
+            @click="deleteReview(item.id)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -245,6 +335,7 @@ function register() {
   if (!formData.value.name) {
     formData.value.name = uname
   }
+  reviewForm.value.author = uname
   usernameInput.value = ''
   passwordInput.value = ''
   authError.value = ''
@@ -261,6 +352,7 @@ function login() {
     if (!formData.value.name) {
       formData.value.name = uname
     }
+    reviewForm.value.author = uname
     usernameInput.value = ''
     passwordInput.value = ''
     authError.value = ''
@@ -274,6 +366,7 @@ function logout() {
   currentRole.value = ''
   localStorage.removeItem('currentUser')
   localStorage.removeItem('currentRole')
+  reviewForm.value.author = ''
   authError.value = ''
 }
 
@@ -409,6 +502,76 @@ function clearForm() {
 function deleteTrip(id) {
   tripList.value = tripList.value.filter(item => item.id !== id)
 }
+
+// ================= BR C.3: Route Reviews & Rating Aggregation =================
+const reviewForm = ref({
+  route: '',
+  rating: 5,
+  author: currentUser.value || '',
+  comment: ''
+})
+
+const reviewErrors = ref({
+  route: '',
+  author: '',
+  comment: ''
+})
+
+// Initial sample reviews to demonstrate average calculation immediately
+const reviewList = ref([
+  { id: 1, route: 'Swanston St Bike Lane', rating: 5, author: 'Liam Cooper', comment: 'Smooth cycling lane with clear markings.', date: '2026-09-06' },
+  { id: 2, route: 'Yarra River Trail', rating: 4, author: 'Maya Patel', comment: 'Scenic walking trail, slightly crowded near the bridge.', date: '2026-09-07' },
+  { id: 3, route: 'Bourke St Mall', rating: 3, author: 'Sarah Jenkins', comment: 'Good pedestrian space, watch for trams.', date: '2026-09-08' }
+])
+
+// Aggregated average rating score (BR C.3 core requirement)
+const averageRating = computed(() => {
+  if (reviewList.value.length === 0) return '0.0'
+  const total = reviewList.value.reduce((acc, curr) => acc + Number(curr.rating || 0), 0)
+  return (total / reviewList.value.length).toFixed(1)
+})
+
+function addReview() {
+  reviewErrors.value = { route: '', author: '', comment: '' }
+  let isValid = true
+
+  if (!reviewForm.value.route.trim()) {
+    reviewErrors.value.route = 'Route name is required.'
+    isValid = false
+  }
+  if (!reviewForm.value.author.trim()) {
+    reviewErrors.value.author = 'Reviewer name is required.'
+    isValid = false
+  }
+  if (!reviewForm.value.comment.trim()) {
+    reviewErrors.value.comment = 'Comment is required.'
+    isValid = false
+  }
+
+  if (!isValid) return
+
+  reviewList.value.unshift({
+    id: Date.now(),
+    route: reviewForm.value.route.trim(),
+    rating: Number(reviewForm.value.rating),
+    author: reviewForm.value.author.trim(),
+    comment: reviewForm.value.comment.trim(),
+    date: '2026-09-08'
+  })
+
+  // Reset form inputs (keep author if still logged in)
+  reviewForm.value.route = ''
+  reviewForm.value.comment = ''
+  reviewForm.value.rating = 5
+  if (currentUser.value) {
+    reviewForm.value.author = currentUser.value
+  }
+}
+
+function deleteReview(id) {
+  reviewList.value = reviewList.value.filter(item => item.id !== id)
+}
+// ==============================================================================
 </script>
 
 <style>
