@@ -305,6 +305,11 @@
           </button>
         </div>
       </div>
+
+      <!-- Security Notice (BR C.4) -->
+      <div class="mt-3 p-2 bg-light border text-muted small text-center">
+        Security Notice: Client-side data validation and XSS escaping active.
+      </div>
     </div>
   </div>
 </template>
@@ -323,6 +328,10 @@ const authError = ref('')
 function register() {
   if (!usernameInput.value.trim() || !passwordInput.value) {
     authError.value = 'Please enter both username and password.'
+    return
+  }
+  if (/[<>]/.test(usernameInput.value)) {
+    authError.value = 'Security notice: Special characters (< >) are not allowed.'
     return
   }
   const uname = usernameInput.value.trim()
@@ -437,6 +446,9 @@ function validateForm() {
   if (!formData.value.name.trim()) {
     errors.value.name = 'Please enter a commuter name.'
     isValid = false
+  } else if (/[<>]/.test(formData.value.name)) {
+    errors.value.name = 'Security notice: HTML characters (< >) are not permitted.'
+    isValid = false
   } else {
     errors.value.name = ''
   }
@@ -474,7 +486,7 @@ function addTrip() {
   tripList.value.push({
     id: Date.now(),
     date: formData.value.date,
-    name: formData.value.name,
+    name: sanitizeInput(formData.value.name),
     distance: Number(formData.value.distance),
     mode: formData.value.mode
   })
@@ -531,6 +543,14 @@ const averageRating = computed(() => {
   return (total / reviewList.value.length).toFixed(1)
 })
 
+// ================= BR C.4: Basic Security & Input Sanitization =================
+// Simple sanitization helper to strip angle brackets (< >) preventing script injection
+function sanitizeInput(str) {
+  if (!str) return ''
+  return str.replace(/[<>]/g, '').trim()
+}
+// ===============================================================================
+
 function addReview() {
   reviewErrors.value = { route: '', author: '', comment: '' }
   let isValid = true
@@ -538,13 +558,24 @@ function addReview() {
   if (!reviewForm.value.route.trim()) {
     reviewErrors.value.route = 'Route name is required.'
     isValid = false
+  } else if (/[<>]/.test(reviewForm.value.route)) {
+    reviewErrors.value.route = 'Security notice: HTML characters (< >) are not permitted.'
+    isValid = false
   }
+
   if (!reviewForm.value.author.trim()) {
     reviewErrors.value.author = 'Reviewer name is required.'
     isValid = false
+  } else if (/[<>]/.test(reviewForm.value.author)) {
+    reviewErrors.value.author = 'Security notice: HTML characters (< >) are not permitted.'
+    isValid = false
   }
+
   if (!reviewForm.value.comment.trim()) {
     reviewErrors.value.comment = 'Comment is required.'
+    isValid = false
+  } else if (/[<>]/.test(reviewForm.value.comment)) {
+    reviewErrors.value.comment = 'Security notice: HTML characters (< >) are not permitted.'
     isValid = false
   }
 
@@ -552,11 +583,11 @@ function addReview() {
 
   reviewList.value.unshift({
     id: Date.now(),
-    route: reviewForm.value.route.trim(),
+    route: sanitizeInput(reviewForm.value.route),
     rating: Number(reviewForm.value.rating),
-    author: reviewForm.value.author.trim(),
-    comment: reviewForm.value.comment.trim(),
-    date: '2026-09-08'
+    author: sanitizeInput(reviewForm.value.author),
+    comment: sanitizeInput(reviewForm.value.comment),
+    date: '2026-09-09'
   })
 
   // Reset form inputs (keep author if still logged in)
