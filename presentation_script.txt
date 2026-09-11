@@ -1,0 +1,108 @@
+================================================================================
+       FIT5032 Assignment 1 - Task 1.3 极简口语逐字稿 (超简单大白话·好读好拿分)
+================================================================================
+演示者: Tujianlong Huang (黄涂健隆) | 学号: 35272694
+演示应用: Ride & Stride Melbourne
+目标时长: 2分30秒 ~ 2分50秒
+
+【内置好的账号密码】：
+- 管理员: 用户名 admin | 密码 admin123 | 角色选 Admin
+- 普通用户: 用户名 commuter | 密码 123456 | 角色选 Commuter
+
+--------------------------------------------------------------------------------
+【0:00 - 0:15】1. 开场报学号 (Introduction)
+--------------------------------------------------------------------------------
+[动作]：鼠标停在网页大标题 "Ride & Stride Melbourne" 处。
+
+【读这句 EN】:
+"Hello everyone. My name is Tujianlong Huang, and my student ID is 35272694. 
+Today I will show my web application for FIT5032 Task 1.3."
+
+【中文意思】:
+"大家好，我是黄涂健隆，学号 35272694。今天我来演示 FIT5032 Task 1.3 的网页应用。"
+
+--------------------------------------------------------------------------------
+【0:15 - 0:55】2. 注册登录与双角色权限 (BR C.1 & C.2: Auth & Roles)
+--------------------------------------------------------------------------------
+[动作 1]：输入 Username: Alex, Password: 123, 角色选 Commuter，点击 Register。
+[动作 2]：点击 Logout。
+[动作 3]：输入 Username: admin, Password: admin123, 角色选 Admin，点击 Login。
+          (鼠标晃一晃红色的 Admin 徽章和下方的管理横幅)
+
+【读这句 EN】:
+"First, let's look at user login and roles.
+I will register a new user named Alex as a Commuter.
+[点击 Register]
+Now Alex is logged in with normal commuter permissions.
+Next, let's log out.
+[点击 Logout]
+Now I will log in as the Admin.
+[输入 admin / admin123，点击 Login]
+As you can see, I am logged in as Admin. 
+An admin has special permissions, like this red banner, the Clear All button, and the ability to delete reviews below."
+
+【中文意思】:
+"首先看登录与角色。我先注册一个新用户 Alex 为普通通勤者。现在以普通权限登录成功。接着登出，再登录 admin。如大家所见，我是管理员登录，拥有专属权限，比如红色横幅、清空按钮，以及在下方删除评论的权限。"
+
+--------------------------------------------------------------------------------
+【0:55 - 1:35】3. 表单校验与安全性 (BR C.4: Validation & Security)
+--------------------------------------------------------------------------------
+[动作 1]：来到表单，什么都不填，直接点击 "Submit Trip" 按钮。（出现红字）
+[动作 2]：在 Distance 输入框输入 -5，点 "Submit Trip"。（提示必须大于0）
+[动作 3]：在 Name 输入框输入 Alex<script>，点 "Submit Trip"。（拦截尖括号）
+[动作 4]：点击 "Clear" 按钮。（全部重置清空）
+
+【读这句 EN】:
+"Next is form validation and security.
+If I click submit on an empty form, red error messages show up for all fields.
+[点击 Submit]
+If I type a negative distance, like minus five, it says distance must be greater than zero.
+[输入 -5 点击 Submit]
+For XSS security, if I type HTML tags like script in the name, the app blocks it.
+[输入 Alex<script> 点击 Submit]
+And clicking Clear resets all inputs and errors."
+[点击 Clear]
+
+【中文意思】:
+"接下来是表单校验与安全。如果空表单直接点提交，所有输入框都会出现红字报错。如果输入负数距离，会提示必须大于 0。关于 XSS 安全，如果输入 script 标签，系统会自动拦截。点击 Clear 按钮可以重置所有输入和错误。"
+
+--------------------------------------------------------------------------------
+【1:35 - 2:15】4. 路线评价与平均分聚合计算 (BR C.3: Rating Aggregation)
+--------------------------------------------------------------------------------
+[动作 1]：页面滚到底部，鼠标指一下 "Average Rating: 4.0 / 5.0 (3 reviews)"。
+[动作 2]：填新评价：
+          - Route Name: Flinders St
+          - Rating: 选 5 - Excellent
+          - Reviewer: Alex
+          - Comment: Very good route
+[动作 3]：点击 "Submit Review" 按钮。
+[动作 4]：鼠标指一下顶部的平均分，已经变成了 4.3 / 5.0！
+
+【读这句 EN】:
+"Third is the rating feature.
+Down here, users can leave reviews and ratings for travel routes.
+Right now, the average rating is 4.0 out of 5 from 3 reviews.
+Let's add a new 5-star review for Flinders Street.
+[填好并点击 Submit Review]
+Now the review is added, and the average rating automatically updates to 4.3 out of 5."
+
+【中文意思】:
+"第三是评价功能。用户可以在这里对路线进行打分。现在 3 条评价的平均分是 4.0 分。我给 Flinders Street 提交一条 5 星好评。提交后，平均分自动重新计算更新为 4.3 分。"
+
+--------------------------------------------------------------------------------
+【2:15 - 2:45】5. 筛选与手机端适配 (Filter & Mobile View)
+--------------------------------------------------------------------------------
+[动作 1]：往上滚，Filter 下拉框选 Cycling，再选回 All Modes。
+[动作 2]：按键盘 F12，切到手机屏幕尺寸（如 iPhone 390px），上下滑动一下。
+[动作 3]：关闭 F12。
+
+【读这句 EN】:
+"We also have a filter to show only Cycling trips, or All Modes.
+[切换下拉框]
+And if we test on mobile view using F12, the page changes smoothly into a clean single column for phones.
+[按 F12 滑动展示，然后关闭 F12]
+That is all for my demonstration. Thank you for watching!"
+
+【中文意思】:
+"我们还有一个筛选器，可以只看骑行，或者看全部。用 F12 切换到手机视图时，页面会自动排成整洁的单列适配手机。这就是我的全部演示，谢谢观看！"
+================================================================================

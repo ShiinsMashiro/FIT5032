@@ -318,6 +318,16 @@
 import { ref, computed } from 'vue'
 
 // ================= BR C.1 & C.2: Auth & Role-based Access =================
+// Pre-seed default accounts so direct login works immediately
+if (!localStorage.getItem('user_admin')) {
+  localStorage.setItem('user_admin', 'admin123')
+  localStorage.setItem('role_admin', 'admin')
+}
+if (!localStorage.getItem('user_commuter')) {
+  localStorage.setItem('user_commuter', '123456')
+  localStorage.setItem('role_commuter', 'commuter')
+}
+
 const currentUser = ref(localStorage.getItem('currentUser') || '')
 const currentRole = ref(localStorage.getItem('currentRole') || '')
 const usernameInput = ref('')
