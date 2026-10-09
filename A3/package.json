@@ -1,0 +1,27 @@
+{
+  "name": "fit5032-a3-ride-and-stride",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monash University FIT5032 Internet Applications Development - Assignment 3: Ride & Stride Melbourne",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5174",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^5.0.2",
+    "axios": "^1.20.0",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "firebase": "^12.19.0",
+    "jspdf": "^4.2.1",
+    "leaflet": "^1.9.4",
+    "vue": "^3.5.40",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.0"
+  }
+}

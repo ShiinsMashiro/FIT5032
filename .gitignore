@@ -26,8 +26,29 @@ dist-ssr
 # Generated PDFs & local screenshots
 *.pdf
 screenshots/
-screenshots_week4/
 screenshots*/
+*.png
+*.jpg
+*.jpeg
 
-# Office temp files
+# Archive and office files
+*.zip
+*.docx
 ~$*
+
+# Scratch and scripts
+*.cjs
+*.py
+*.tmp*
+.lab_tmp/
+.firebase/
+acp
+nul
+transcript/
+# Review and handoff files (local and testing package only)
+HANDOFF.md
+CHANGE_LOG_*.md
+TESTING_AND_CODE_REVIEW_MANIFEST.md
+SHA256SUMS*.txt
+FIT5032_Ed_Lessons_Complete_Weekly_Guide.*
+presentation_script*.txt
