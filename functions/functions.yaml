@@ -1,0 +1,17 @@
+specVersion: v1alpha1
+endpoints:
+  calculateEcoStats:
+    availableMemoryMb: null
+    timeoutSeconds: null
+    minInstances: null
+    maxInstances: 1
+    ingressSettings: null
+    concurrency: null
+    serviceAccountEmail: null
+    vpc: null
+    platform: gcfv2
+    labels: {}
+    httpsTrigger: {}
+    entryPoint: calculateEcoStats
+extensions: {}
+requiredAPIs: []
