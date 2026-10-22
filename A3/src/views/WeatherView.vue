@@ -183,7 +183,7 @@ const fallbackCoordsWeather = async (lat, lon) => {
 }
 
 onMounted(() => {
-  fetchCurrentLocationWeather()
+  searchByCity()
 })
 </script>
 
