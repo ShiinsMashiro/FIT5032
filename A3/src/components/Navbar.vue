@@ -44,6 +44,11 @@
               Cloud Stats
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/WeatherCheck" class="nav-link text-secondary" active-class="active fw-bold text-dark">
+              Weather Check
+            </router-link>
+          </li>
         </ul>
 
         <!-- User Authentication Status -->

@@ -6,6 +6,7 @@ import ReviewsTableView from '../views/ReviewsTableView.vue'
 import MapView from '../views/MapView.vue'
 import EmailView from '../views/EmailView.vue'
 import CloudStatsView from '../views/CloudStatsView.vue'
+import WeatherView from '../views/WeatherView.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -14,7 +15,8 @@ const routes = [
   { path: '/reviews', name: 'ReviewsTable', component: ReviewsTableView },
   { path: '/map', name: 'Map', component: MapView },
   { path: '/email', name: 'Email', component: EmailView },
-  { path: '/cloud-stats', name: 'CloudStats', component: CloudStatsView }
+  { path: '/cloud-stats', name: 'CloudStats', component: CloudStatsView },
+  { path: '/WeatherCheck', name: 'GetWeather', component: WeatherView }
 ]
 
 const router = createRouter({
